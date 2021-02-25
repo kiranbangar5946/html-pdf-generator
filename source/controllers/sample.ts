@@ -5,11 +5,16 @@ import { NextFunction, Request, Response } from 'express';
 import fs from 'fs';
 import pdf from 'html-pdf'; 
 
+// @ts-ignore
+// import signer from 'node-signpdf';
+// console.log('signer',signer)
+
+
 /**
  * Constants
  */
-const filePath = `${process.cwd()}/view/invoice.html`
-const pdfPath = './invoice.pdf'
+const filePath = `${process.cwd()}/view/Rendered.html`
+const pdfPath = './rendered.pdf'
 
 /**
  * Health check
@@ -32,13 +37,22 @@ const serverHealthCheck = (req: Request, res: Response, next: NextFunction) => {
 const generatePdf = async (req: Request, res: Response, next: NextFunction) => {
     try{
 
-        const options: object = { format: 'Letter' };
+        const options: object = {
+            format: "Legal",
+             orientation:'landscape',
+            //  "border": {
+            //     "top": "1in",            // default is 0, units: mm, cm, in, px
+            //     "right": "1in",
+            //     // "bottom": "2in",
+            //     "left": "1.5in"
+            //   }
+            };
 
         //reads html file with fs module
         const html = fs.readFileSync(filePath, 'utf8');
 
         //creates pdf using 'html-pdf' module
-        // pdf.create(html, options).toFile('./invoice.pdf', (err: Error, res: any) => {
+        // pdf.create(html, options).toFile(pdfPath, (err: Error, res: any) => {
         //     if (err) return console.log(err);
         //     console.log(res); // { filename: '/app/invoice.pdf' }
         // });
